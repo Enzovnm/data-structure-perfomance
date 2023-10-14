@@ -24,6 +24,8 @@ int main() {
     switch (sortingType)
     {
     case 1:
+
+    
         break;
     
     default:
