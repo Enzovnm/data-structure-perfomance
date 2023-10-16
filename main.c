@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define ANSI_GREEN "\x1b[32m"
 #define ANSI_YELLOW "\x1b[33m"
@@ -7,7 +8,7 @@
 #define ANSI_RESET "\x1b[0m"
 #define ANSI_BLUE "\x1b[34m"
 
-void printArray(int *array, int length) {
+void printArray(const int *array, int length) {
 
     for (int i = 0; i < length; i++) {
         printf("%d ", array[i]);
@@ -22,6 +23,13 @@ void header(){
     printf("========================================================================\n\n");
 }
 
+void invalidOption(){
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf(ANSI_RED "Opção inválida. Tente novamente!\n\n" ANSI_RESET);
+}
+
+
 int sortingTypeChoise(){
 
     printf(ANSI_BLUE "1- BubbleSort\n" ANSI_RESET);
@@ -30,11 +38,20 @@ int sortingTypeChoise(){
     printf("Qual tipo de ordenação você deseja analisar?\n");
 
     int choice;
-    scanf("%d", &choice);
+
+    while (1) {
+        if (scanf("%d", &choice) != 1 || choice < 1 || choice > 3) {
+            invalidOption();
+        } else {
+            break;
+        }
+    }
+
     system("clear");
     return choice;
     
 }
+
 
 int arrayDefinitionChoise(){
 
@@ -79,7 +96,7 @@ void quickSort(int *array,int length){
 
 int *creatingArrayRandValues(int length){
     int *array;
-
+    srand(time(NULL));
     array = (int *)malloc(length * sizeof(int));
 
     for (int i = 0; i < length; i++){
@@ -98,6 +115,8 @@ int readingArrayLength(){
 }
 
 
+
+
 int main() {
     while(1){
         header();
@@ -105,7 +124,6 @@ int main() {
 
         switch(arrayDefinition){
             case 1:
-
 
                 int sorting = sortingTypeChoise();
                 int length = readingArrayLength();
@@ -128,6 +146,9 @@ int main() {
                 else if(sorting == 3){
 
                 }
+                else{
+                    
+                }
 
                 break;
             case 2:
@@ -136,9 +157,7 @@ int main() {
                 exit(0);
             
             default:
-                int c;
-                while ((c = getchar()) != '\n' && c != EOF);
-                printf(ANSI_RED "Opção inválida. Tente novamente!\n\n" ANSI_RESET);
+                invalidOption();
                 break;
         }
     }
