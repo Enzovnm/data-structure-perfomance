@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdlib.h>
 
 #define ANSI_GREEN "\x1b[32m"
 #define ANSI_YELLOW "\x1b[33m"
@@ -45,8 +44,8 @@ int arrayDefinitionChoise(){
     printf(ANSI_RED "3 - Sair \n\n" ANSI_RESET);
 
     int arrayDefinition;
+    
     scanf("%d",&arrayDefinition);
-
     system("clear");
 
     return arrayDefinition;
@@ -73,14 +72,18 @@ void bubbleSort(int *array, int length) {
     }
 }
 
+void quickSort(int *array,int length){
+    
+}
 
-int *creatingArrayRandValues(length){
+
+int *creatingArrayRandValues(int length){
     int *array;
 
     array = (int *)malloc(length * sizeof(int));
 
     for (int i = 0; i < length; i++){
-        array[i] = (rand() % 100) + 1;
+        array[i] = rand();
     }
 
     return array;
@@ -97,27 +100,33 @@ int readingArrayLength(){
 
 int main() {
     while(1){
-
         header();
         int arrayDefinition = arrayDefinitionChoise();
 
         switch(arrayDefinition){
             case 1:
 
+
                 int sorting = sortingTypeChoise();
                 int length = readingArrayLength();
                 int *array = creatingArrayRandValues(length);
 
                 system("clear");
-
-                printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
-                printArray(array,length);
-
+                
                 if(sorting == 1){
+                    printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
+                    printArray(array,length);
                     bubbleSort(array, length);
                     printf(ANSI_BLUE "Dados ordenados com BubbleSort:\n" ANSI_RESET);
                     printArray(array,length);
                     free(array);
+                    array = NULL;
+                }
+                else if(sorting == 2){
+
+                }
+                else if(sorting == 3){
+
                 }
 
                 break;
@@ -127,9 +136,11 @@ int main() {
                 exit(0);
             
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+                printf(ANSI_RED "Opção inválida. Tente novamente!\n\n" ANSI_RESET);
                 break;
         }
-
     }
+    return 0;
 }
