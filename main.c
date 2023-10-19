@@ -58,7 +58,7 @@ int arrayDefinitionChoise(){
     printf("Digite uma das opções abaixo:\n\n");
     printf(ANSI_BLUE "1- Valores aleatórios\n" ANSI_RESET);
     printf(ANSI_YELLOW "2- Arquivo de texto\n" ANSI_RESET);
-    printf(ANSI_RED "3 - Sair \n\n" ANSI_RESET);
+    printf(ANSI_RED "3 - Sair \n" ANSI_RESET);
 
     int arrayDefinition;
     
@@ -69,16 +69,20 @@ int arrayDefinitionChoise(){
 
 }
 
+void swap(int *x, int *y){
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
 void bubbleSort(int *array, int length) {
-    int temp, swapped;
+    int swapped;
 
     for (int i = 0; i < length - 1; i++) {
         swapped = 0;
         for (int j = 0; j < length - 1 - i; j++) {
             if (array[j] > array[j + 1]) {
-                temp = array[j];
-                array[j] = array[j + 1];
-                array[j + 1] = temp;
+                swap(&array[j], &array[j + 1]);
                 swapped = 1;
             }
         }
@@ -90,7 +94,7 @@ void bubbleSort(int *array, int length) {
 }
 
 void quickSort(int *array,int length){
-    
+
 }
 
 
@@ -113,8 +117,6 @@ int readingArrayLength(){
     scanf("%d", &length);
     return length;
 }
-
-
 
 
 int main() {
