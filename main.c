@@ -8,6 +8,13 @@
 #define ANSI_RESET "\x1b[0m"
 #define ANSI_BLUE "\x1b[34m"
 
+
+void header(){
+    printf("========================================================================\n");
+    printf(ANSI_GREEN "SISTEMA PARA ANÁLISE DE PERFORMANCE DE ALGORITMOS DE ORDENAÇÃO DE DADOS\n" ANSI_RESET);
+    printf("========================================================================\n\n");
+}
+
 void printArray(const int *array, int length) {
 
     for (int i = 0; i < length; i++) {
@@ -15,12 +22,6 @@ void printArray(const int *array, int length) {
     }
 
     printf("\n\n");
-}
-
-void header(){
-    printf("========================================================================\n");
-    printf(ANSI_GREEN "SISTEMA PARA ANÁLISE DE PERFORMANCE DE ALGORITMOS DE ORDENAÇÃO DE DADOS\n" ANSI_RESET);
-    printf("========================================================================\n\n");
 }
 
 void invalidOption(){
@@ -58,7 +59,7 @@ int arrayDefinitionChoise(){
     printf("Digite uma das opções abaixo:\n\n");
     printf(ANSI_BLUE "1- Valores aleatórios\n" ANSI_RESET);
     printf(ANSI_YELLOW "2- Arquivo de texto\n" ANSI_RESET);
-    printf(ANSI_RED "3 - Sair \n" ANSI_RESET);
+    printf(ANSI_RED "3 - Sair \n\n" ANSI_RESET);
 
     int arrayDefinition;
     
@@ -93,12 +94,34 @@ void bubbleSort(int *array, int length) {
     }
 }
 
-void quickSort(int *array,int length){
+int partition(int *array, int low, int high){
 
+    int pivot = array[high];
+    int i = (low - 1);
+
+    for(int j = low; j < high; j++){
+        if(array[j] <=  pivot){
+            i++;
+            swap(&array[i], &array[j]);
+        }
+    }
+
+    swap(&array[i + 1], &array[high]);
+
+    return (i + 1);
 }
 
 
-int *creatingArrayRandValues(int length){
+void quickSort(int *array, int low, int high){
+    if(low < high){
+        int pi = partition(array,low,high);
+        quickSort(array, low, pi - 1);
+        quickSort(array, pi + 1, high);
+    }
+}
+
+
+int *createRandomArray(int length){
     int *array;
     srand(time(NULL));
     array = (int *)malloc(length * sizeof(int));
@@ -129,13 +152,14 @@ int main() {
 
                 int sorting = sortingTypeChoise();
                 int length = readingArrayLength();
-                int *array = creatingArrayRandValues(length);
+                int *array = createRandomArray(length);
 
                 system("clear");
                 
+                printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
+                printArray(array,length);
+
                 if(sorting == 1){
-                    printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
-                    printArray(array,length);
                     bubbleSort(array, length);
                     printf(ANSI_BLUE "Dados ordenados com BubbleSort:\n" ANSI_RESET);
                     printArray(array,length);
@@ -143,7 +167,11 @@ int main() {
                     array = NULL;
                 }
                 else if(sorting == 2){
-
+                    quickSort(array,0,length - 1);
+                    printf(ANSI_BLUE "Dados ordenados com QuickSort:\n" ANSI_RESET);
+                    printArray(array,length);
+                    free(array);
+                    array = NULL;
                 }
                 else if(sorting == 3){
 
