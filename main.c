@@ -15,21 +15,28 @@ void header(){
     printf("========================================================================\n\n");
 }
 
-void printArray(const int *array, int length) {
 
-    for (int i = 0; i < length; i++) {
-        printf("%d ", array[i]);
-    }
+int arrayDefinitionChoise(){
 
-    printf("\n\n");
+    printf("Digite uma das opções abaixo:\n\n");
+    printf(ANSI_BLUE "1- Valores aleatórios\n" ANSI_RESET);
+    printf(ANSI_YELLOW "2- Arquivo de texto\n" ANSI_RESET);
+    printf(ANSI_RED "3 - Sair \n\n" ANSI_RESET);
+
+    int arrayDefinition;
+    
+    scanf("%d",&arrayDefinition);
+    system("clear");
+
+    return arrayDefinition;
+
 }
 
 void invalidOption(){
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
-    printf(ANSI_RED "Opção inválida. Tente novamente!\n\n" ANSI_RESET);
+    printf(ANSI_RED "Opção inválida. Tente novamente!\n" ANSI_RESET);
 }
-
 
 int sortingTypeChoise(){
 
@@ -53,21 +60,33 @@ int sortingTypeChoise(){
     
 }
 
+int readingArrayLength(){
+    int length;
+    printf("Digite o tamanho do array:\n");
+    scanf("%d", &length);
+    return length;
+}
 
-int arrayDefinitionChoise(){
 
-    printf("Digite uma das opções abaixo:\n\n");
-    printf(ANSI_BLUE "1- Valores aleatórios\n" ANSI_RESET);
-    printf(ANSI_YELLOW "2- Arquivo de texto\n" ANSI_RESET);
-    printf(ANSI_RED "3 - Sair \n\n" ANSI_RESET);
+void printArray(const int *array, int length) {
+    for (int i = 0; i < length; i++) {
+        printf("%d ", array[i]);
+    }
 
-    int arrayDefinition;
+    printf("\n\n");
+}
+
+int *createRandomArray(int length){
+    int *array;
+    srand(time(NULL));
+    array = (int *)malloc(length * sizeof(int));
+
+    for (int i = 0; i < length; i++){
+        array[i] = rand() % 100;
+    }
+
+    return array;
     
-    scanf("%d",&arrayDefinition);
-    system("clear");
-
-    return arrayDefinition;
-
 }
 
 void swap(int *x, int *y){
@@ -120,25 +139,18 @@ void quickSort(int *array, int low, int high){
     }
 }
 
-
-int *createRandomArray(int length){
-    int *array;
-    srand(time(NULL));
-    array = (int *)malloc(length * sizeof(int));
-
-    for (int i = 0; i < length; i++){
-        array[i] = rand();
+void selectionSort(int *array, int length){
+    int min_indx;
+    for (int i = 0; i < length - 1; i++) {
+        min_indx = i;
+        for (int j = i + 1; j < length; j++) {
+            if (array[j] < array[min_indx])
+                min_indx = j;
+        }
+        if (min_indx != i) {
+            swap(&array[min_indx], &array[i]);
+        }
     }
-
-    return array;
-    
-}
-
-int readingArrayLength(){
-    int length;
-    printf("Digite o tamanho do array:\n");
-    scanf("%d", &length);
-    return length;
 }
 
 
@@ -173,11 +185,12 @@ int main() {
                     free(array);
                     array = NULL;
                 }
-                else if(sorting == 3){
-
-                }
                 else{
-                    
+                    selectionSort(array,length);
+                    printf(ANSI_BLUE "Dados ordenados com SelectionSort:\n" ANSI_RESET);
+                    printArray(array,length);
+                    free(array);
+                    array = NULL;
                 }
 
                 break;
