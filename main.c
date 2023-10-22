@@ -154,28 +154,38 @@ void selectionSort(int *array, int length){
 }
 
 void executeSort(int sorting, int isFile, int *array, int length) {
+
+    clock_t start, end;
+
     if (isFile == 0) {
         printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
         printArray(array, length);
     }
 
     switch (sorting) {
+
         case 1:
+            start = clock();
             bubbleSort(array, length);
+            end = clock();
             if (isFile == 0) {
                 printf(ANSI_BLUE "Dados ordenados com BubbleSort:\n" ANSI_RESET);
                 printArray(array, length);
             }
             break;
         case 2:
+            start = clock();
             quickSort(array, 0, length - 1);
+            end = clock();
             if (isFile == 0) {
                 printf(ANSI_BLUE "Dados ordenados com QuickSort:\n" ANSI_RESET);
                 printArray(array, length);
             }
             break;
         default:
+            start = clock();
             selectionSort(array, length);
+            end = clock();
             if (isFile == 0) {
                 printf(ANSI_BLUE "Dados ordenados com SelectionSort:\n" ANSI_RESET);
                 printArray(array, length);
@@ -186,6 +196,10 @@ void executeSort(int sorting, int isFile, int *array, int length) {
         free(array);
         array = NULL;
     }
+
+    double sortingSpentTime =  (double)(end - start) / CLOCKS_PER_SEC;
+    printf(ANSI_GREEN "Tempo gasto para ordernar os dados: %f segundos\n" ANSI_RESET, sortingSpentTime);
+
 }
 
 
@@ -250,7 +264,6 @@ int main() {
                 arrayFile = NULL;
 
                 printf(ANSI_BLUE "Foi gerado um novo arquivo output.txt com seus dados ordenados!\n" ANSI_RESET);
-
 
                 break;
 
