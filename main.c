@@ -82,7 +82,7 @@ int *createRandomArray(int length){
     array = (int *)malloc(length * sizeof(int));
 
     for (int i = 0; i < length; i++){
-        array[i] = rand() % 100;
+        array[i] = rand();
     }
 
     return array;
@@ -153,6 +153,41 @@ void selectionSort(int *array, int length){
     }
 }
 
+void executeSort(int sorting, int isFile, int *array, int length) {
+    if (isFile == 0) {
+        printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
+        printArray(array, length);
+    }
+
+    switch (sorting) {
+        case 1:
+            bubbleSort(array, length);
+            if (isFile == 0) {
+                printf(ANSI_BLUE "Dados ordenados com BubbleSort:\n" ANSI_RESET);
+                printArray(array, length);
+            }
+            break;
+        case 2:
+            quickSort(array, 0, length - 1);
+            if (isFile == 0) {
+                printf(ANSI_BLUE "Dados ordenados com QuickSort:\n" ANSI_RESET);
+                printArray(array, length);
+            }
+            break;
+        default:
+            selectionSort(array, length);
+            if (isFile == 0) {
+                printf(ANSI_BLUE "Dados ordenados com SelectionSort:\n" ANSI_RESET);
+                printArray(array, length);
+            }
+    }
+    
+    if(isFile == 0){
+        free(array);
+        array = NULL;
+    }
+}
+
 
 int main() {
     while(1){
@@ -161,43 +196,66 @@ int main() {
 
         switch(arrayDefinition){
             case 1:
-
                 int sorting = sortingTypeChoise();
                 int length = readingArrayLength();
                 int *array = createRandomArray(length);
-
                 system("clear");
-                
-                printf(ANSI_GREEN "Dados iniciais:\n" ANSI_RESET);
-                printArray(array,length);
-
-                if(sorting == 1){
-                    bubbleSort(array, length);
-                    printf(ANSI_BLUE "Dados ordenados com BubbleSort:\n" ANSI_RESET);
-                    printArray(array,length);
-                    free(array);
-                    array = NULL;
-                }
-                else if(sorting == 2){
-                    quickSort(array,0,length - 1);
-                    printf(ANSI_BLUE "Dados ordenados com QuickSort:\n" ANSI_RESET);
-                    printArray(array,length);
-                    free(array);
-                    array = NULL;
-                }
-                else{
-                    selectionSort(array,length);
-                    printf(ANSI_BLUE "Dados ordenados com SelectionSort:\n" ANSI_RESET);
-                    printArray(array,length);
-                    free(array);
-                    array = NULL;
-                }
-
+                executeSort(sorting,0,array,length);
                 break;
+
             case 2:
+                int maxNumbers = 500000;
+                int num;
+                int count = 0;
+                int *arrayFile = (int *)malloc(maxNumbers * sizeof(int));
+                char filename[256];
+
+                
+                printf("Digite o nome do arquivo: ");
+                scanf("%s",filename);
+
+                FILE *file = fopen(filename,"r");
+
+                while (file == NULL)
+                {
+                    printf(ANSI_RED "Não foi possível abrir o arquivo %s, Digite o nome do arquivo novamente\n" ANSI_RESET, filename);
+                    scanf("%s", filename);
+                    file = fopen(filename, "r");
+                }
+                
+
+                for(count; count < maxNumbers && fscanf(file,"%d", &num) != EOF; count ++ ){
+                    arrayFile[count] = num;
+                }
+
+                fclose(file);
+                system("clear");
+                int sortingForFile = sortingTypeChoise();
+                executeSort(sortingForFile, 1, arrayFile, count);
+                
+                FILE *outputFile = fopen("output.txt", "w");
+
+                if(outputFile == NULL){
+                    printf(ANSI_RED "Não foi possível escrever o arquivo %s\n" ANSI_RESET, filename);
+                    exit(EXIT_FAILURE);
+                }
+
+                for (int i = 0; i < count; i++) {
+                    fprintf(outputFile, "%d\n", arrayFile[i]);
+                }
+
+                fclose(outputFile);
+
+                free(arrayFile);
+                arrayFile = NULL;
+
+                printf(ANSI_BLUE "Foi gerado um novo arquivo output.txt com seus dados ordenados!\n" ANSI_RESET);
+
+
                 break;
+
             case 3:
-                exit(0);
+                exit(EXIT_SUCCESS);
             
             default:
                 invalidOption();
