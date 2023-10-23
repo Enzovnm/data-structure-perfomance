@@ -19,7 +19,7 @@ Here are the technology used in this project.
 
 ## Running the code 
 
-You have to install a compiler, you can use GCC
+You have to install a C compiler, you can use GCC
 
 ```
 gcc main.c -o <output_file_name>
